@@ -1,0 +1,6 @@
+package com.te.counrtryfinder.exception;
+
+public class CountryDetailsException extends RuntimeException{
+
+	
+}

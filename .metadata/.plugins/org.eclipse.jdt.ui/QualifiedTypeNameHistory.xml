@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.core.type.TypeReference"/>
+    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+    <fullyQualifiedTypeName name="com.example.mrmrscart.dto.Countries"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PathVariable"/>
+    <fullyQualifiedTypeName name="com.example.mrmrscart.dto.StatesDto"/>
+    <fullyQualifiedTypeName name="javax.persistence.Column"/>
+    <fullyQualifiedTypeName name="com.example.mrmrscart.dto.CitysDto"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.response.ResponsePage"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.service.MrMrsCartCountryFinderService"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RestController"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestMapping"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Service"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.service.CountryFinderService"/>
+    <fullyQualifiedTypeName name="javax.sql.rowset.serial.SerialException"/>
+    <fullyQualifiedTypeName name="java.rmi.ServerException"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RestControllerAdvice"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ExceptionHandler"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.response.ResponseError"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.exception.CountryDetailsException"/>
+    <fullyQualifiedTypeName name="org.springframework.http.ResponseEntity"/>
+    <fullyQualifiedTypeName name="org.springframework.http.HttpStatus"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonIgnoreProperties"/>
+    <fullyQualifiedTypeName name="lombok.Data"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.exception.StateDetailException"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.dto.CountryDto"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.dto.StateDto"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.dto.CityDto"/>
+    <fullyQualifiedTypeName name="lombok.AllArgsConstructor"/>
+    <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.constant.ConstantMessage"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.exception.ServerSideException"/>
+    <fullyQualifiedTypeName name="com.te.counrtryfinder.exception.CityDetailException"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Value"/>
+</qualifiedTypeNameHistroy>

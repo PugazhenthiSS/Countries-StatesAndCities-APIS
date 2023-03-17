@@ -1,0 +1,14 @@
+package com.example.mrmrscart.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class Countries {
+
+	private String name;
+	private String iso2;
+}

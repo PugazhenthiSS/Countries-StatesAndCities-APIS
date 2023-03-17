@@ -1,0 +1,4 @@
+api:
+  key_name: X-CSCAPI-KEY
+  key_value: OUJ4Z0FVWEJpMGlZQ1N3SjJCMWk5R3hucmdZMFdveHRIMTZYTndydA==
+  base_url: https://api.countrystatecity.in/v1/countries

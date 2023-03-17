@@ -1,0 +1,190 @@
+package com.example.mrmrscart.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.mrmrscart.dto.CityDto;
+import com.example.mrmrscart.dto.CounrtyList;
+import com.example.mrmrscart.dto.CountryDto;
+import com.example.mrmrscart.dto.StateDto;
+import com.example.mrmrscart.entity.Country;
+import com.example.mrmrscart.response.Response;
+import com.example.mrmrscart.service.MrMrsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/mrController")
+public class MrMrsController {
+
+	@Autowired
+	private  MrMrsService mrMrsService;
+	
+	@Autowired
+	private  RestTemplate restTemplate;
+
+	@PostMapping("/save")
+	public ResponseEntity<Response> registerCountry(@RequestBody CountryDto countryDto) {
+		CountryDto register = mrMrsService.save(countryDto);
+		if (register != null) {
+			return new ResponseEntity<>(new Response(false, "Country Added Successfully", register), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "Country Not Added", null), HttpStatus.OK);
+	}
+
+	@PostMapping("/saveState/{worldCountry}")
+	public ResponseEntity<Response> registerState(@PathVariable String worldCountry, @RequestBody StateDto stateDto) {
+		StateDto register = mrMrsService.saveState(worldCountry, stateDto);
+		if (register != null) {
+			return new ResponseEntity<>(new Response(false, "State Added Successfully", register), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "state Not Added", null), HttpStatus.OK);
+	}
+
+	@PostMapping("/saveCity/{states}")
+	public ResponseEntity<Response> registerCity(@PathVariable String states, @RequestBody CityDto cityDto) {
+		CityDto register = mrMrsService.saveCity(states, cityDto);
+		if (register != null) {
+			return new ResponseEntity<>(new Response(false, "city Added Successfully", register), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "city Not Added", null), HttpStatus.OK);
+	}
+
+	@GetMapping("/allCountry")
+	public ResponseEntity<Response> getCountry() {
+		String url = "https://atlas.mapmyindia.com/api/places/geocode?address=state";
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization","Bearer 5d60757d-810f-4d54-86a8-126d3d2ed4ed");
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		ResponseEntity<String> exchange = restTemplate.exchange(url,HttpMethod.GET,entity,String.class);
+//		List<String> register = mrMrsService.getCountry();
+//		String exchange = "exchange";
+		if (exchange != null) {
+			return new ResponseEntity<>(new Response(false, "get Country Successfully", exchange), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "something went wrong", null), HttpStatus.OK);
+	}
+	@GetMapping("/allStates/{worldCountry}")
+	public ResponseEntity<Response> getStates(@PathVariable String worldCountry) {
+		List<String> register = mrMrsService.getStates(worldCountry);
+		if (register != null) {
+			return new ResponseEntity<>(new Response(false, "get States Successfully", register), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "something went wrong", null), HttpStatus.OK);
+	}
+	
+	@GetMapping("/countries")
+	public ResponseEntity<Response> getAll() throws ClientProtocolException, IOException{
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpGet = new HttpGet("https://api.countrystatecity.in/v1/countries");
+        httpGet.setHeader("X-CSCAPI-KEY","OUJ4Z0FVWEJpMGlZQ1N3SjJCMWk5R3hucmdZMFdveHRIMTZYTndydA==");
+
+        HttpResponse response = httpClient.execute(httpGet);
+        ObjectMapper objectMapper = new ObjectMapper();
+//        Object[] readValue = objectMapper.readValue(response.getEntity().getContent(), Object[].class);
+        CounrtyList[] readValue =  objectMapper.readValue(response.getEntity().getContent(),CounrtyList[].class);
+//        for(Object name : readValue) {
+//        	if(name.getIso2=="AF")
+//        }
+//		String url = "https://api.countrystatecity.in/v1/countries";
+//		 ResponseEntity<String[]> forEntity = restTemplate.getForEntity(url,String[].class);
+//		String[] body = forEntity.getBody();
+//	        String url = "https://restcountries.com/v3.1/name/" + country + "?fullText=true";
+//	        ResponseEntity<Country[]> forEntity = restTemplate.getForEntity(url, Country[].class);
+////	     restTemplate.getForEntity(url, Country[].class);
+//	        Country[] countries = forEntity.getBody();
+//	        if (countries == null || countries.length == 0) {
+//	            return Collections.emptyList();
+//	        } else {
+//	          Arrays.asList(countries[0].getStates());
+//	        }
+//	        
+	        
+	        
+	        
+	        
+	        
+//		   String owner = "dr5hn";
+//	        String repo = "countries-states-cities-database";
+//	        String branch = "blob/master";
+//	        String path = "csv/countries.csv";
+//	        String url = String.format("https://github.com/%s/%s/%s/%s", owner, repo, branch, path);
+//	        
+//	        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+//	        conn.setRequestMethod("GET");
+//	        conn.setRequestProperty("Accept", "application/vnd.github.v3+json");
+//	        
+//	        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//	        String line;
+//	        StringBuilder content = new StringBuilder();
+//	        while ((line = reader.readLine()) != null) {
+//	        	
+//	            content.append(line);
+//	            content.append(System.lineSeparator());
+//	        }
+//	        reader.close();
+//	        
+//	        String fileContent = content.toString();
+////	        System.out.println(fileContent);
+
+//        String query = String.format("[out:json];area[name=\"%s\"][admin_level=2];(node[place=city](area););out;", country);
+//
+//        String url = "https://overpass-api.de/api/interpreter?data=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+//
+//        List<String> cities = new ArrayList<>();
+//        JSONObject json = new JSONObject(response.getBody());
+//        JSONArray elements = json.getJSONArray("elements");
+//
+//        for (int i = 0; i < elements.length(); i++) {
+//            JSONObject element = elements.getJSONObject(i);
+//            String cityName = element.getString("tags").split(":")[1];
+//            cities.add(cityName);
+//        }
+
+		if (readValue != null) {
+			return new ResponseEntity<>(new Response(false, "get States Successfully", readValue), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "something went wrong", null), HttpStatus.OK);
+	}
+	@GetMapping("/allCity/{states}")
+	public ResponseEntity<Response> getCity(@PathVariable String states) {
+		List<String> register = mrMrsService.getCity(states);
+		if (register != null) {
+			return new ResponseEntity<>(new Response(false, "get City Successfully", register), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(true, "something went wrong", null), HttpStatus.OK);
+	}
+
+}

@@ -1,0 +1,27 @@
+package com.te.counrtryfinder.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.te.counrtryfinder.dto.CountryDto;
+import com.te.counrtryfinder.response.ResponsePage;
+import com.te.counrtryfinder.service.CountryFinderService;
+import com.te.counrtryfinder.service.MrMrsCartCountryFinderService;
+
+
+public class CountryFinderController {
+	
+	private CountryFinderService countryFinderService;
+
+	@GetMapping("/countries")
+	public ResponseEntity<ResponsePage> getAllContries() {
+		List<CountryDto> allCountries = countryFinderService.getAllCountries();
+		if (allCountries != null) {
+			return new ResponseEntity<>(new ResponsePage(false, "All Countries fetched Successfully", allCountries), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponsePage(true, "something went wrong", null), HttpStatus.EXPECTATION_FAILED);
+	}
+}

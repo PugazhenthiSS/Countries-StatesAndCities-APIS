@@ -1,0 +1,48 @@
+package com.te.counrtryfinder.service;
+
+import java.util.List;
+
+import javax.sql.rowset.serial.SerialException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.te.counrtryfinder.constant.ConstantMessage;
+import com.te.counrtryfinder.dto.CountryDto;
+import com.te.counrtryfinder.exception.CountryDetailsException;
+
+@Service
+public class CountryFinderServiceImplementation implements CountryFinderService{
+
+	private final String API_KEY_NAME = "X-CSCAPI-KEY";
+	private final String API_KEY_VALUE = "OUJ4Z0FVWEJpMGlZQ1N3SjJCMWk5R3hucmdZMFdveHRIMTZYTndydA==";
+	private final String BASE_URL = "https://api.countrystatecity.in/v1/countries";
+	
+	@Override
+	public List<CountryDto> getAllCountries() {
+		try {
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+	        HttpGet httpGet = new HttpGet(BASE_URL);
+	        httpGet.setHeader(API_KEY_NAME,API_KEY_VALUE);
+
+	        HttpResponse response = httpClient.execute(httpGet);
+	        if(response != null) {
+	        ObjectMapper objectMapper = new ObjectMapper();
+	       return objectMapper.readValue(response.getEntity().getContent(),new TypeReference<List<CountryDto>>() {});
+	        } else {
+	        	throw new CountryDetailsException(ConstantMessage.COUNTRY_DETAILS_ERROR);
+	        }
+			} catch (CountryDetailsException e) {
+				throw e;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new SerialException(ConstantMessage.SERVER_ERROR);
+			}
+	}
+
+}

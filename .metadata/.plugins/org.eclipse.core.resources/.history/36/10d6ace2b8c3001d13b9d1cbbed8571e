@@ -1,0 +1,10 @@
+package com.te.counrtryfinder.constant;
+
+public class ConstantMessage {
+
+	private static final String COUNTRY_DETAILS_ERROR = "Country Details Not Fetched";
+	private static final String STATE_DETAILS_ERROR = "State Details Not Fetched";
+	private static final String CITY_DETAILS_ERROR = "City Details Not Fetched";
+	private static final String SERVER_ERROR = "Something Went Wrong Try After Sometimes";
+	
+}

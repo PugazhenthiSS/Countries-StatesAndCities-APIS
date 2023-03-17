@@ -1,0 +1,5 @@
+package com.example.mrmrscart.dto;
+
+public class StatesDto {
+
+}

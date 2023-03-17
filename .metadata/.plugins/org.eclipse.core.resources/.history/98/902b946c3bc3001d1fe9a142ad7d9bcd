@@ -1,0 +1,31 @@
+package com.example.mrmrscart.service;
+
+import java.util.List;
+
+import com.example.mrmrscart.dto.CityDto;
+import com.example.mrmrscart.dto.CountriesDto;
+import com.example.mrmrscart.dto.CountryDto;
+import com.example.mrmrscart.dto.StateDto;
+import com.example.mrmrscart.dto.StatesDto;
+
+public interface MrMrsService {
+
+	CountryDto save(CountryDto countryDto);
+
+	StateDto saveState(String worldCountry, StateDto stateDto);
+
+	CityDto saveCity(String states, CityDto cityDto);
+
+	List<String> getCountry();
+
+	List<String> getStates(String worldCountry);
+
+	List<String> getCity(String states);
+
+	List<CountriesDto> getAllCountries();
+
+	List<StatesDto> getListOfStates(String countryName);
+
+	List<StatesDto> getListOfCities(String country, String state);
+
+}

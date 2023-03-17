@@ -1,0 +1,24 @@
+
+Š	java:S116'"SRename this field "BASE_URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äÊ·Êøÿÿÿÿ8õ´ÿ©î0HóRMINORZ
+CODE_SMELL
+Y
+java:S1170&"!Make this final field static too.(×Îå¿şÿÿÿÿ8Æéô©î0HşRMINORZ
+CODE_SMELL
+	java:S116&"XRename this field "API_KEY_VALUE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(×Îå¿şÿÿÿÿ8Æéô©î0HõRMINORZ
+CODE_SMELL
+m	java:S125"<This block of commented-out lines of code should be removed.(öïòùÿÿÿÿHëRMAJORZ
+CODE_SMELL
+Y
+java:S1170'"!Make this final field static too.(äÊ·Êøÿÿÿÿ8õ´ÿ©î0HãRMINORZ
+CODE_SMELL
+	java:S116%"WRename this field "API_KEY_NAME" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰çœˆûÿÿÿÿ8Æéô©î0HôRMINORZ
+CODE_SMELL
+m	java:S125–"<This block of commented-out lines of code should be removed.(®Õ£İÿÿÿÿÿHäRMAJORZ
+CODE_SMELL
+Y
+java:S1170%"!Make this final field static too.(‰çœˆûÿÿÿÿ8Æéô©î0HöRMINORZ
+CODE_SMELL
+l	java:S106ı"9Replace this use of System.out or System.err by a logger.(ºÿÈ†8¹íï«î0HòRMAJORZ
+CODE_SMELL
+m	java:S125¦"<This block of commented-out lines of code should be removed.(ìŞ¨ıÿÿÿÿH÷RMAJORZ
+CODE_SMELL

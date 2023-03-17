@@ -1,0 +1,147 @@
+package com.te.counrtryfinder.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.te.counrtryfinder.constant.ConstantMessage;
+import com.te.counrtryfinder.dto.CityDto;
+import com.te.counrtryfinder.dto.CountryDto;
+import com.te.counrtryfinder.dto.StateDto;
+import com.te.counrtryfinder.exception.CityDetailException;
+import com.te.counrtryfinder.exception.CountryDetailsException;
+import com.te.counrtryfinder.exception.ServerSideException;
+import com.te.counrtryfinder.exception.StateDetailException;
+
+@Service
+public class CountryFinderServiceImplementation implements CountryFinderService{
+	
+	@Value("${api.key.name:X-CSCAPI-KEY}")
+//	@Value("${api.key.name}")
+	private String apiKeyName; //= "X-CSCAPI-KEY";
+	@Value("${api.key.value:OUJ4Z0FVWEJpMGlZQ1N3SjJCMWk5R3hucmdZMFdveHRIMTZYTndydA==}")
+//	@Value("${api.key.value}")
+	private String apiKeyValue; //= "OUJ4Z0FVWEJpMGlZQ1N3SjJCMWk5R3hucmdZMFdveHRIMTZYTndydA==";
+	@Value("${api.base.url:https://api.countrystatecity.in/v1/countries}")
+//	@Value("${api.base.url}")
+	private String apiBaseUrl;// = "https://api.countrystatecity.in/v1/countries";
+	
+	@Override
+	public List<CountryDto> getAllCountries() {
+		try {
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+	        HttpGet httpGet = new HttpGet(apiBaseUrl);
+	        httpGet.setHeader(apiKeyName,apiKeyValue);
+
+	        HttpResponse response = httpClient.execute(httpGet);
+	        if(response != null) {
+	        ObjectMapper objectMapper = new ObjectMapper();
+	       return objectMapper.readValue(response.getEntity().getContent(),new TypeReference<List<CountryDto>>() {});
+	        } else {
+	        	throw new CountryDetailsException(ConstantMessage.COUNTRY_DETAILS_ERROR);
+	        }
+			} catch (CountryDetailsException e) {
+				throw e;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new ServerSideException(ConstantMessage.SERVER_ERROR);
+			}
+	}
+
+	@Override
+	public List<StateDto> getListOfStates(String countryName) {
+		try {
+
+			CloseableHttpClient httpClient1 = HttpClientBuilder.create().build();
+	        HttpGet httpGet1 = new HttpGet(apiBaseUrl);
+	        httpGet1.setHeader(apiKeyName,apiKeyValue);
+
+	        HttpResponse response1 = httpClient1.execute(httpGet1);
+	        if(response1 != null) {
+	        ObjectMapper objectMapper1 = new ObjectMapper();
+	       List<CountryDto> readValue1 = objectMapper1.readValue(response1.getEntity().getContent(),new TypeReference<List<CountryDto>>() {});
+	       List<String> collect2 = readValue1.stream()
+	       .filter(obj -> obj.getName().equalsIgnoreCase(countryName))
+	       .map(CountryDto::getIso2)
+	       .collect(Collectors.toList());
+	       String string = collect2.get(0);
+	       
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+	        HttpGet httpGet = new HttpGet(apiBaseUrl+"/"+string+"/states");
+	        httpGet.setHeader(apiKeyName,apiKeyValue);
+
+	        HttpResponse response = httpClient.execute(httpGet);
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        return objectMapper.readValue(response.getEntity().getContent(),new TypeReference<List<StateDto>>() {});
+			 } else {
+		        	throw new StateDetailException(ConstantMessage.STATE_DETAILS_ERROR);
+		        }
+				} catch (StateDetailException e) {
+					throw e;
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new ServerSideException(ConstantMessage.SERVER_ERROR);
+				}
+	}
+
+	@Override
+	public List<CityDto> getListOfCities(String country, String state) {
+		try {
+			CloseableHttpClient httpClient1 = HttpClientBuilder.create().build();
+			String k="s";
+	        HttpGet httpGet1 = new HttpGet(k);
+	        httpGet1.setHeader(apiKeyName,apiKeyValue);
+
+	        HttpResponse response1 = httpClient1.execute(httpGet1);
+	        if(response1 != null) {
+	        ObjectMapper objectMapper1 = new ObjectMapper();
+	       List<CountryDto> readValue1 = objectMapper1.readValue(response1.getEntity().getContent(),new TypeReference<List<CountryDto>>() {});
+	       List<String> collect2 = readValue1.stream()
+	       .filter(obj -> obj.getName().equalsIgnoreCase(country))
+	       .map(CountryDto::getIso2)
+	       .collect(Collectors.toList());
+	       String string = collect2.get(0);
+			
+			
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+	        HttpGet httpGet = new HttpGet(apiBaseUrl+"/"+string+"/states");
+	        httpGet.setHeader(apiKeyName,apiKeyValue);
+
+	        HttpResponse response = httpClient.execute(httpGet);
+	        ObjectMapper objectMapper = new ObjectMapper();
+	       List<StateDto> readValue = objectMapper.readValue(response.getEntity().getContent(),new TypeReference<List<StateDto>>() {});
+	       List<String> collect = readValue.stream()
+	       .filter(obj -> obj.getName().equalsIgnoreCase(state))
+	       .map(StateDto::getIso2)
+	       .collect(Collectors.toList());
+	       String string2 = collect.get(0);
+	       CloseableHttpClient httpClient2 = HttpClientBuilder.create().build();
+	       HttpGet httpGet2 = new HttpGet(apiBaseUrl+"/"+string+"/states/"+string2+"/cities");
+	       httpGet2.setHeader(apiKeyName,apiKeyValue);
+
+	       HttpResponse response2 = httpClient2.execute(httpGet2);
+	       ObjectMapper objectMapper2 = new ObjectMapper();
+	       return objectMapper2.readValue(response2.getEntity().getContent(),new TypeReference<List<CityDto>>() {});
+			 
+			 } else {
+		        	throw new CityDetailException(ConstantMessage.CITY_DETAILS_ERROR);
+		        }
+				} catch (CityDetailException e) {
+					throw e;
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new ServerSideException(ConstantMessage.SERVER_ERROR);
+				}
+	}
+
+}

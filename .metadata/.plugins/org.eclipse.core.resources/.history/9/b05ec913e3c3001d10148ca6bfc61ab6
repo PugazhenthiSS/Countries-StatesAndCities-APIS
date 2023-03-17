@@ -1,0 +1,19 @@
+package com.te.counrtryfinder.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.te.counrtryfinder.dto.CityDto;
+import com.te.counrtryfinder.dto.CountryDto;
+import com.te.counrtryfinder.dto.StateDto;
+
+public interface CountryFinderService {
+
+	List<CountryDto> getAllCountries();
+
+	List<StateDto> getListOfStates(String countryName);
+
+	List<CityDto> getListOfCities(String country, String state);
+
+}

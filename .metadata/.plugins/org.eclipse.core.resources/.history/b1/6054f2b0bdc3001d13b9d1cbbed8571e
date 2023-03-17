@@ -1,0 +1,31 @@
+package com.te.counrtryfinder.exceptionhandler;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.te.counrtryfinder.exception.CountryDetailsException;
+import com.te.counrtryfinder.exception.ServerSideException;
+import com.te.counrtryfinder.response.ResponseError;
+
+@RestControllerAdvice
+public class CountryFinderExceptionController {
+
+	@Autowired
+	private ResponseError responseError;
+	
+	@ExceptionHandler(CountryDetailsException.class)
+	ResponseEntity<ResponseError> exception(CountryDetailsException countryDetailsException){
+		responseError.setMessage(countryDetailsException.getMessage());
+		responseError.setErrorMessage(true);
+		return new ResponseEntity<>(responseError, HttpStatus.EXPECTATION_FAILED);
+	}
+	@ExceptionHandler(ServerSideException.class)
+	ResponseEntity<ResponseError> exception(ServerSideException serverSideException){
+		responseError.setMessage(serverSideException.getMessage());
+		responseError.setErrorMessage(true);
+		return new ResponseEntity<>(responseError, HttpStatus.EXPECTATION_FAILED);
+	}
+}

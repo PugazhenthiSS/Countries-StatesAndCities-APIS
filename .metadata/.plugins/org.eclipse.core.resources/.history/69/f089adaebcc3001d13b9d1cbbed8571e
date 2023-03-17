@@ -1,0 +1,5 @@
+package com.te.counrtryfinder.dto;
+
+public class StateDto {
+
+}

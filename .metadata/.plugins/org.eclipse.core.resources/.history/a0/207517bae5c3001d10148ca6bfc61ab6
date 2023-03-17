@@ -1,0 +1,53 @@
+package com.te.counrtryfinder.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.counrtryfinder.dto.CityDto;
+import com.te.counrtryfinder.dto.CountryDto;
+import com.te.counrtryfinder.dto.StateDto;
+import com.te.counrtryfinder.response.ResponsePage;
+import com.te.counrtryfinder.service.CountryFinderService;
+
+@RestController
+@RequestMapping("/api/v1/CountryFinder")
+public class CountryFinderController {
+	
+	@Autowired
+	private CountryFinderService countryFinderService;
+
+	@GetMapping("/countries")
+	public ResponseEntity<ResponsePage> getAllContries() {
+		List<CountryDto> allCountries = countryFinderService.getAllCountries();
+		if (allCountries != null) {
+			return new ResponseEntity<>(new ResponsePage(false, "All Countries fetched Successfully", allCountries), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponsePage(true, "something went wrong", null), HttpStatus.EXPECTATION_FAILED);
+	}
+	
+	@GetMapping("/countries/{countryName}")
+	public ResponseEntity<ResponsePage> getListOfStates(@PathVariable String countryName ) {
+		List<StateDto> listOfStates = countryFinderService.getListOfStates(countryName);
+		
+       if (listOfStates != null) {
+			return new ResponseEntity<>(new ResponsePage(false, "Get All states for this "+countryName+" Fetched Successfully", listOfStates), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponsePage(true, "something went wrong", null), HttpStatus.OK);
+	}
+	
+	@GetMapping("/countries/{country}/states/{state}")
+	public ResponseEntity<ResponsePage> getListOfCities(@PathVariable String country,@PathVariable String state ) {
+		List<CityDto> listOfCities = countryFinderService.getListOfCities(country,state);
+       if (listOfCities != null) {
+			return new ResponseEntity<>(new ResponsePage(false, "get All Cities for the "+country+"/"+state+" fetched  Successfully", listOfCities), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponsePage(true, "something went wrong", null), HttpStatus.OK);
+	}
+}

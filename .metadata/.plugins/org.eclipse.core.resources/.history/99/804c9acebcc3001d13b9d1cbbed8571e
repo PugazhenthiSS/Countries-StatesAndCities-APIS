@@ -1,0 +1,11 @@
+package com.te.counrtryfinder.service;
+
+import java.util.List;
+
+import com.te.counrtryfinder.dto.CountryDto;
+
+public interface CountryFinderService {
+
+	List<CountryDto> getAllCountries();
+
+}

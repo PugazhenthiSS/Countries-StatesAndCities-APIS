@@ -1,0 +1,10 @@
+
+\
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±ÄøÿÿÿÿH¢RMINORZ
+CODE_SMELL
+a
+java:S1128"6Remove this unused import 'javax.persistence.Convert'.(¹žüH¤RMINORZ
+CODE_SMELL
+|
+java:S1128"PRemove this unused import 'com.example.mrmrscart.converter.StringListConverter'.(à¢‰¦H¦RMINORZ
+CODE_SMELL

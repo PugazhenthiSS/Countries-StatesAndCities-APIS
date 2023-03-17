@@ -1,0 +1,207 @@
+package com.example.mrmrscart.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.mrmrscart.constant.Constants;
+import com.example.mrmrscart.dto.CityDto;
+import com.example.mrmrscart.dto.Countries;
+import com.example.mrmrscart.dto.CountryDto;
+import com.example.mrmrscart.dto.StateDto;
+import com.example.mrmrscart.entity.City;
+import com.example.mrmrscart.entity.Country;
+import com.example.mrmrscart.entity.ListOfCountry;
+import com.example.mrmrscart.entity.State;
+import com.example.mrmrscart.exception.ListException;
+import com.example.mrmrscart.exception.MrMrsCartException;
+import com.example.mrmrscart.repositary.CityRepositary;
+import com.example.mrmrscart.repositary.CountryReposiatary;
+import com.example.mrmrscart.repositary.ListOfCountryRepositary;
+import com.example.mrmrscart.repositary.StateReposuitary;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class MrMrsServiceImp implements MrMrsService {
+
+	@Autowired
+	private CountryReposiatary countryReposiatary;
+
+	@Autowired
+	private StateReposuitary stateReposuitary;
+
+	@Autowired
+	private CityRepositary cityRepositary;
+
+	@Autowired
+	private ListOfCountryRepositary listOfCountryRepositary;
+	
+	
+
+	@Override
+	public CountryDto save(CountryDto countryDto) {
+		try {
+
+			Country country = new Country();
+			BeanUtils.copyProperties(countryDto, country);
+			countryReposiatary.save(country);
+			return countryDto;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.SAVE_ERROR);
+		}
+	}
+
+	@Override
+	public StateDto saveState(String worldCountry, StateDto stateDto) {
+		try {
+			Country country = countryReposiatary.findByWorldCountry(worldCountry);
+			State state = new State();
+			BeanUtils.copyProperties(stateDto, state);
+			country.getListOfState().add(state);
+			countryReposiatary.save(country);
+			return stateDto;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.SAVE_ERROR);
+		}
+
+	}
+
+	@Override
+	public CityDto saveCity(String states, CityDto cityDto) {
+
+		try {
+			State state = stateReposuitary.findByStates(states);
+			City city = new City();
+			BeanUtils.copyProperties(cityDto, city);
+			state.getListOfCity().add(city);
+			stateReposuitary.save(state);
+			return cityDto;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.SAVE_ERROR);
+		}
+
+	}
+
+	@Override
+	public List<String> getCountry() {
+		try {
+			
+			
+			List<String> collect = listOfCountryRepositary.findAll().stream().map(ListOfCountry::getCountry).distinct()
+					.collect(Collectors.toList());
+
+			if (collect != null) {
+				return collect;
+
+			} else {
+				throw new ListException(Constants.LISTEMPTY_ERROR);
+			}
+		} catch (ListException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.INTERNAL_ERROR);
+		}
+
+	}
+
+	@Override
+	public List<String> getStates(String worldCountry) {
+		try {
+			
+			
+			List<String> collect = listOfCountryRepositary.findByCountry(worldCountry).stream()
+					.map(ListOfCountry::getStates).distinct().collect(Collectors.toList());
+			if (collect != null) {
+			
+				return collect;
+			} else {
+				throw new ListException(Constants.LISTEMPTY_ERROR);
+			}
+		} catch (ListException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.INTERNAL_ERROR);
+		}
+	}
+
+	@Override
+	public List<String> getCity(String states) {
+		try {
+			List<String> collect = listOfCountryRepositary.findByStates(states).stream().map(ListOfCountry::getCity).collect(Collectors.toList());
+			if (collect != null) {
+		
+				return collect;
+			} else {
+				throw new ListException(Constants.LISTEMPTY_ERROR);
+			}
+		} catch (ListException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.INTERNAL_ERROR);
+		}
+	}
+
+	@Override
+	public List<Countries> getAllCountries() {
+		try {
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpGet = new HttpGet("https://api.countrystatecity.in/v1/countries");
+        httpGet.setHeader("X-CSCAPI-KEY","OUJ4Z0FVWEJpMGlZQ1N3SjJCMWk5R3hucmdZMFdveHRIMTZYTndydA==");
+
+        HttpResponse response = httpClient.execute(httpGet);
+        if(response != null) {
+        ObjectMapper objectMapper = new ObjectMapper();
+       List<Countries> readValue = objectMapper.readValue(response.getEntity().getContent(),new TypeReference<List<Countries>>() {});
+		return readValue;
+        } else {
+        	throw new ListException(Constants.LISTEMPTY_ERROR);
+        }
+		} catch (ListException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MrMrsCartException(Constants.INTERNAL_ERROR);
+		}
+	}
+}
+
+
+
+
+//if (findAll != null) {
+//List<CountryDto> dtos = new ArrayList<>();
+//findAll.forEach(a -> {
+//	CountryDto s = new CountryDto();
+//	BeanUtils.copyProperties(a, s);
+//	dtos.add(s);
+//});
+
+//List<State> listOfState = findByWorldCountry.getListOfState();
+//List<StateDto> dtos = new ArrayList<>();
+//listOfState.forEach(a -> {
+//	StateDto s = new StateDto();
+//	BeanUtils.copyProperties(a, s);
+//	dtos.add(s);
+//});
+
+//List<City> listOfCity = findByStates.getListOfCity();
+//List<CityDto> cityDtos = new ArrayList<>();
+//listOfCity.forEach(a -> {
+//	CityDto s = new CityDto();
+//	BeanUtils.copyProperties(a, s);
+//	cityDtos.add(s);
+//});
